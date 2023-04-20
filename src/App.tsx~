@@ -1,0 +1,43 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+
+import { auth } from "./firebase";
+
+import Home from "./pages/home";
+import Chats from "./pages/chats";
+import "./App.css";
+import { useEffect, useState } from "react";
+import { User } from "firebase/auth";
+
+function App() {
+  const [authUser, setAuthUser] = useState<User>();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setAuthUser(user);
+      } else {
+        console.log("Not logged in");
+      }
+    });
+  }, []);
+
+  return (
+    <ChakraProvider>
+      <Router>
+        <Routes>
+          {authUser ? (
+            <Route path="/chats" element={<Chats />} />
+          ) : (
+            <Route path="/" element={<Home />} />
+          )}
+        </Routes>
+      </Router>
+    </ChakraProvider>
+  );
+}
+
+export default App;
+function Restricted() {
+  return <h1>Hello</h1>;
+}
