@@ -1,27 +1,54 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
-import { Button, Flex, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../../firebase";
 import { setDoc, doc, Timestamp } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorStat, setErrorStat] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async () => {
-    createUserWithEmailAndPassword(auth, email, password).catch((error) => {
-      alert(error);
-    });
-    const userId = auth.currentUser?.uid as string;
-    const docRef = doc(db, "users", userId);
-    await setDoc(docRef, {
-      uid: userId,
-      groupChats: [],
-      createdAt: Timestamp.now(),
-    });
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async () => {
+        const userId = auth.currentUser?.uid as string;
+        const docRef = doc(db, "users", userId);
+        await setDoc(docRef, {
+          uid: userId,
+          groupChats: [],
+          createdAt: Timestamp.now(),
+        });
+
+        navigate("/chats");
+      })
+      .catch((error: FirebaseError) => {
+        setErrorStat(true);
+
+        let errstr: string = error.code;
+        console.log(error);
+        errstr = errstr.split("/")[1].split("-").join(" ");
+
+        setErrorMessage(errstr);
+
+        setEmail("");
+        setPassword("");
+      });
   };
 
   return (
@@ -34,6 +61,7 @@ const SignUp = () => {
             <Input
               type="email"
               required={true}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
@@ -42,6 +70,7 @@ const SignUp = () => {
             <Input
               type="password"
               required={true}
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
@@ -49,6 +78,7 @@ const SignUp = () => {
             Sign Up!
           </Button>
         </form>
+        {errorStat && <Text>{errorMessage}</Text>}
       </Flex>
     </>
   );

@@ -1,7 +1,11 @@
 {
   "hosting": {
-    "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "**",
@@ -46,5 +50,8 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "predeploy": ["npm run lint", "npm run build"]
+  "predeploy": [
+    "npm run lint",
+    "npm run build"
+  ]
 }
