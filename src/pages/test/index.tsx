@@ -6,14 +6,9 @@ import {
   limit,
   orderBy,
   query,
-  where,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import {
-  useCollection,
-  useCollectionData,
-  useCollectionDataOnce,
-} from "react-firebase-hooks/firestore";
+import { useState } from "react";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, db } from "../../firebase";
 import { useParams } from "react-router-dom";
 

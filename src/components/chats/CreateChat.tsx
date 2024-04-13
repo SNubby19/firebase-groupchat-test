@@ -32,11 +32,15 @@ function generateRandomString() {
 }
 
 const CreateChat: React.FC<CustomModalProps> = ({ isOpen, onClose }) => {
-  const [chatName, setChatName] = useState<String>("");
+  const [chatName, setChatName] = useState<string>("");
   const { value, options, onChange } = useMultiSelect({
     value: [],
     options: [],
   });
+
+  const customOnChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => setChatName(e.target.value);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -53,14 +57,12 @@ const CreateChat: React.FC<CustomModalProps> = ({ isOpen, onClose }) => {
     onClose();
 
     options.length = 0;
-    if (typeof value === "string"){
-      value.replace(value, "")
-    }
-    else if (Array.isArray(value)){
-      value.length = 0
+    if (typeof value === "string") {
+      value.replace(value, "");
+    } else if (Array.isArray(value)) {
+      value.length = 0;
     } else {
       console.log("value is undefined, can't clear list");
-      
     }
 
     const createGC = httpsCallable(functions, "createGC");
@@ -94,7 +96,7 @@ const CreateChat: React.FC<CustomModalProps> = ({ isOpen, onClose }) => {
               <Input
                 placeholder="Groupchat Name"
                 type="input"
-                onChange={(e) => setChatName(e.target.value)}
+                onChange={customOnChange}
                 required={true}
               />
             </FormControl>

@@ -1,7 +1,7 @@
 import functions from "firebase-functions";
-import {Timestamp} from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import admin from "firebase-admin";
-import {auth, db} from "./firebase.js";
+import { auth, db } from "./firebase.js";
 import sgMail from "@sendgrid/mail";
 import * as dotenv from "dotenv";
 
@@ -10,7 +10,7 @@ dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const createGC = functions.https.onCall(async (data, context) => {
-  const {emails, chatName, chatID, creatorID, adminIDs} = data;
+  const { emails, chatName, chatID, creatorID, adminIDs } = data;
 
   const creatorCredentials = await auth.getUser(creatorID);
 
@@ -39,40 +39,40 @@ export const createGC = functions.https.onCall(async (data, context) => {
     }
 
     auth
-        .getUserByEmail(emails[email])
-        .then((userRecord) => {
-          console.log("adding existing meember");
-          newGCData.members.push(userRecord.uid);
-          const docRef = db.collection("users").doc(userRecord.uid);
-          docRef.update({
-            groupChats: admin.firestore.FieldValue.arrayUnion(chatID),
-          });
-        })
-        .catch((error) => {
-          const {code} = error;
-          switch (code) {
-            case "auth/user-not-found":
-            // const msg = {
-            //   to: emails[email],
-            //   from: "snayak@uwaterloo.ca",
-            //   subject: "Someone has invited you",
-            //   text: `${creatorCredentials.displayName} has invited you to ${chatName}, a free lightweight group
-            //       chat service for you and your friends at FriendsGC. It looks like you dont have an account
-            //       with us yet.To start talking to your friends please create an account here: http://192.168.56.1:5173/
-            //       to use the service. Once you have an account, sign in and click on the "Find Existing Groupchat" button
-            //       and enter the following code ${chatID}  and click join group chat`,
-            // };
-            // sgMail.send(msg);
-              console.log("Sending email to non-site-member ", emails[email]);
-              break;
-            default:
-              console.log(error);
-              break;
-          }
+      .getUserByEmail(emails[email])
+      .then((userRecord) => {
+        console.log("adding existing meember");
+        newGCData.members.push(userRecord.uid);
+        const docRef = db.collection("users").doc(userRecord.uid);
+        docRef.update({
+          groupChats: admin.firestore.FieldValue.arrayUnion(chatID),
         });
+      })
+      .catch((error) => {
+        const { code } = error;
+        switch (code) {
+          case "auth/user-not-found":
+            const msg = {
+              to: emails[email],
+              from: "snayak@uwaterloo.ca",
+              subject: "Someone has invited you",
+              text: `${creatorCredentials.displayName} has invited you to ${chatName}, a free lightweight group
+                  chat service for you and your friends at FriendsGC. It looks like you dont have an account
+                  with us yet.To start talking to your friends please create an account here: http://192.168.56.1:5173/
+                  to use the service. Once you have an account, sign in and click on the "Find Existing Groupchat" button
+                  and enter the following code ${chatID}  and click join group chat`,
+            };
+            sgMail.send(msg);
+            console.log("Sending email to non-site-member ", emails[email]);
+            break;
+          default:
+            console.log(error);
+            break;
+        }
+      });
     console.log(newGCData);
     await newGCRef.set(newGCData);
   }
 
-  return {message: "hello"};
+  return { message: "hello" };
 });

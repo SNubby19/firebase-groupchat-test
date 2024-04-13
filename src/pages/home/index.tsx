@@ -1,4 +1,4 @@
-import { Button, Text, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import SignUp from "../../components/home/SignUp";
 import SignIn from "../../components/home/SignIn";

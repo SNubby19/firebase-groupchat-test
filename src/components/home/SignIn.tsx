@@ -16,7 +16,7 @@ function SignIn() {
     event.preventDefault();
     console.log("Form finished");
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(() => {
         setErrorMessage("");
         navigate("/chats");
       })
