@@ -8,7 +8,6 @@ const theme = extendTheme({
   },
 });
 
-import "./App.css";
 import Chats from "./pages/chats";
 import Home from "./pages/home";
 import Test from "./pages/test";

@@ -1,4 +1,4 @@
-import functions from "firebase-functions";
+import { https } from "firebase-functions/v1";
 import { Timestamp } from "firebase-admin/firestore";
 import admin from "firebase-admin";
 import { auth, db } from "./firebase.js";
@@ -9,7 +9,7 @@ dotenv.config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-export const createGC = functions.https.onCall(async (data, context) => {
+export const createGC = https.onCall(async (data, context) => {
   const { emails, chatName, chatID, creatorID, adminIDs } = data;
 
   const creatorCredentials = await auth.getUser(creatorID);
@@ -75,4 +75,11 @@ export const createGC = functions.https.onCall(async (data, context) => {
   }
 
   return { message: "hello" };
+}, {
+  cors: {
+    origin: ['*'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    headers: ['*'],
+    maxAge: 0
+  }
 });
