@@ -95,28 +95,36 @@ const ChatsList = () => {
 
   return (
     <>
-      <Flex>
+      <Flex direction={"column"}>
         <h1>Your Chats</h1>
-        <Button onClick={onOpen}>
-          <AddIcon boxSize={4} />
-          Create Groupchat
-        </Button>
-        <CreateChat isOpen={isOpen} onClose={onClose} />
-        <InputGroup maxWidth={"35%"}>
-          <InputRightElement>
-            <IconButton
-              aria-label="join group chat"
-              icon={<SearchIcon color="black" />}
-              onClick={joinGC}
+        <Flex
+          direction={"row"}
+          gap={25}
+          justifyContent={"center"}
+          margin={15}
+          width={"100%"}
+        >
+          <Button onClick={onOpen}>
+            <AddIcon boxSize={4} />
+            Create Groupchat
+          </Button>
+          <CreateChat isOpen={isOpen} onClose={onClose} />
+          <InputGroup maxWidth={"35%"}>
+            <InputRightElement>
+              <IconButton
+                aria-label="join group chat"
+                icon={<SearchIcon color="black" />}
+                onClick={joinGC}
+              />
+            </InputRightElement>
+            <Input
+              type={"text"}
+              value={joinChatID}
+              onChange={(e) => setJoinChatID(e.target.value)}
+              placeholder="Enter Group Chat ID..."
             />
-          </InputRightElement>
-          <Input
-            type={"text"}
-            value={joinChatID}
-            onChange={(e) => setJoinChatID(e.target.value)}
-            placeholder="Enter Group Chat ID..."
-          />
-        </InputGroup>
+          </InputGroup>
+        </Flex>
       </Flex>
       <Flex direction={"column"}>
         {gcS && userData ? (
