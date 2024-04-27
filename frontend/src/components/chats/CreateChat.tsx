@@ -51,6 +51,7 @@ const CreateChat: React.FC<CustomModalProps> = ({ isOpen, onClose }) => {
       chatName,
       chatID,
       emails,
+      creatorEmail: auth.currentUser?.email,
       creatorID: auth.currentUser?.uid,
       adminIDs: [auth.currentUser?.uid],
     };
