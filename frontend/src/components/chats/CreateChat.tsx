@@ -12,10 +12,9 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { MultiSelect, useMultiSelect } from "chakra-multiselect";
-// import { httpsCallable } from "firebase/functions";
 import React, { useState } from "react";
-
-import { auth /*functions*/ } from "../../firebase";
+import { functions, auth } from "../../firebase";
+import { httpsCallable } from "firebase/functions";
 
 interface CustomModalProps {
   isOpen: boolean;
@@ -67,32 +66,21 @@ const CreateChat: React.FC<CustomModalProps> = ({ isOpen, onClose }) => {
       console.log("value is undefined, can't clear list");
     }
 
-    // const createNewGC = httpsCallable(functions, "createNewGC");
+    const createGC = httpsCallable(functions, "createGC");
 
-    // createNewGC({ ...groupchatData })
-    //   .then((result) => {
-    //     console.log(JSON.stringify(result));
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.code);
-    //     console.log(error.message);
-    //     console.log(error.details);
-    //   });
-
-    const apiURL =
-      "https://us-central1-uinsports-mobile-app.cloudfunctions.net/createNewGC";
-
-    fetch(apiURL, {
-      method: "POST",
-      body: JSON.stringify(groupchatData),
-    })
-      .then((result) => {
-        console.log(JSON.stringify(result));
+    createGC(groupchatData)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
       })
       .catch((error) => {
-        console.log(error.code);
-        console.log(error.message);
-        console.log(error.details);
+        const code = error.code;
+        const message = error.message;
+        const details = error.details;
+
+        console.log(code);
+        console.log(message);
+        console.log(details);
       });
   };
 

@@ -15,7 +15,7 @@ module.exports = {
     "no-case-declarations": "off",
     "max-len": "off",
     "no-unused-vars": "off",
-    "quotes": ["error", "double", {allowTemplateLiterals: true}],
+    quotes: ["error", "double", { allowTemplateLiterals: true }],
   },
   overrides: [
     {
